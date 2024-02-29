@@ -21,7 +21,7 @@ LLMob is a simple framework that takes advantage of Large Language Models (LLMs)
 - **./simulator/engine/person.py**: Generate personal activity trajectory according to real-world check-in data.
 - **./simulator/engine/functions/traj_infer.py**: Personal activity trajectory generation function.
 - **./simulator/engine/functions/PISC.py**: Personal activity pattern identification function.
-- - **./simulator/engine/memory/retrieval_helper.py**: Function related to motivation retrieval.
+- **./simulator/engine/memory/retrieval_helper.py**: Function related to motivation retrieval.
 - **./simulator/prompt_template**: Prompt template used in this project.
 
 ## Usage
