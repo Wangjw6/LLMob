@@ -4,7 +4,7 @@
 
 # Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation
 
-## Description
+## 📖 Description
 This repository is the implemetation of LLMob from [Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation](https://arxiv.org/abs/2402.14744). 
 LLMob is a simple framework that takes advantage of Large Language Models (LLMs) for personal activity trajectory generation.
 
@@ -21,14 +21,14 @@ LLMob is a simple framework that takes advantage of Large Language Models (LLMs)
 </p>
 
 
-## Key Components
+## ⭐໋ Key Components
 - **./simulator/engine/person.py**: Generate personal activity trajectory according to real-world check-in data.
 - **./simulator/engine/functions/traj_infer.py**: Personal activity trajectory generation function.
 - **./simulator/engine/functions/PISC.py**: Personal activity pattern identification function.
 - **./simulator/engine/memory/retrieval_helper.py**: Function related to motivation retrieval.
 - **./simulator/prompt_template**: Prompt template used in this project.
 
-## Usage
+## ⚙️ Usage
 
 To get started with LLMob, follow these steps:
 
@@ -41,9 +41,9 @@ cd simulator/engine/
 python person.py
 ```
 
-## Citation
+## 📚 BibTex Citation
 
-If you find our work useful in your research, please cite our [paper](https://arxiv.org/abs/2402.14744):
+If you would like to cite our code or paper, please use:
 
 ```
 @article{wang2024large,
@@ -54,7 +54,7 @@ If you find our work useful in your research, please cite our [paper](https://ar
 }
 ```
 
-## Acknowledgments
+## 🌷 Acknowledgments
 
 This project refers to several open-source ChatGPT application:
 
