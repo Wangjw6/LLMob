@@ -1,0 +1,9 @@
+Ask for motivation given activity area and a plan
+!<INPUT 0>! domain knowledge
+!<INPUT 1>! Example
+<commentblockmarker>###</commentblockmarker>
+Instructions: Complete a description of the persona for a person according to following activity pattern:
+!<INPUT 0>!
+
+Example: !<INPUT 1>!
+

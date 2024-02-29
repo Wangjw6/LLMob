@@ -1,0 +1,11 @@
+Ask for motivation given activity area and a plan
+!<INPUT 0>! activity area
+!<INPUT 1>! plan
+!<INPUT 2>! number of past days
+<commentblockmarker>###</commentblockmarker>
+Instructions: Act as a person in an urban neighborhood and describe the motivation for your activities. !<INPUT 0>! In the last !<INPUT 2>! days you have the following activities:
+!<INPUT 1>!
+
+Describe in a *one* sentence your future motivation today after these activities. Highlight any personal interests and needs. 
+
+I plan

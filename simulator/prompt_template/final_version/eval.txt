@@ -1,0 +1,10 @@
+Ask for motivation given activity area and a plan
+!<INPUT 0>! context
+!<INPUT 1>! test plan
+<commentblockmarker>###</commentblockmarker>
+Now you act as a person with the follwing feature: !<INPUT 0>! 
+Here is a plan for you.
+!<INPUT 1>! 
+On the scale of 1 to 10, where 1 is the least possibility and 10 is the highest possibility, rate how likely you will follow this plan according to your routine pattern and explain the reason.
+Rating: <fill in>
+Reason:

@@ -1,0 +1,13 @@
+Ask for motivation given activity area and a plan
+!<INPUT 0>! identity
+!<INPUT 1>! proposed behavior
+!<INPUT 2>! habit from data
+!<INPUT 3>! more habit from data
+!<INPUT 4>! proposed behavior in first view
+<commentblockmarker>###</commentblockmarker>
+Context: Act as a {{!<INPUT 0>!}} in an urban neighborhood, !<INPUT 1>! !<INPUT 2>!. There are also locations you sometimes visit: !<INPUT 3>!.
+
+Instructions: Reflecting on the context given, I'd like you to summarize your daily routine and the motivation of the routine. Your description should be coherent, utilizing conclusive language to form a well-structured paragraph.
+
+Text to Continue: I am !<INPUT 0>! in an urban neighborhood, !<INPUT 1>!,...
+

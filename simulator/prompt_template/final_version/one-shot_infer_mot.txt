@@ -1,0 +1,20 @@
+Ask for pattern description given activity area and some historical records
+!<INPUT 0>! attribute
+!<INPUT 1>! motivation
+!<INPUT 2>! date
+!<INPUT 3>! activity area
+!<INPUT 4>! weekend or weekday
+!<INPUT 5>! demo
+!<INPUT 6>! condition, guide the agent how to think about the motivation
+!<INPUT 7>! Prior
+<commentblockmarker>###</commentblockmarker>
+Instructions: Act as a person in an urban neighborhood. !<INPUT 0>! !<INPUT 6>!
+!<INPUT 1>!
+Query: !<INPUT 7>! Think about your daily routine. Then tell me your plan for *today* and exlpain it. The following are the locations you are likely to visit:*!<INPUT 3>!*
+Response to the prompt above in json in the *following* format:
+{"plan": [<Location> at <Time>, <Location> at <Time>,...]
+"reason":...}
+
+Example:
+{"plan": [Elementary School#125 at 9:10, Town Hall#489 at 12:50, Rest Area#585 at 13:40, Seafood Restaurant#105 at 14:20]
+"reason":"My plan today is to finish my teaching duty in the morning and find something delicious to taste."}
