@@ -224,6 +224,7 @@ def setup(tag="30min", city=""):
     names = names.split("\n")
     random.shuffle(names)
     peoples = list(routine_sentence.keys())
+
     # adjust some ambiguous location names
     city_net = city_net.replace("&", "and")
     routine_sentence = {key: value.replace('&', 'and') for key, value in routine_sentence.items()}
@@ -371,7 +372,6 @@ def setup(tag="30min", city=""):
         map_pos[pos] = loc
         pos += 1
 
-
     prob_pos = None
     track_datas = None
     return (routine_sentence, names, peoples, city_net, loc_map, activity_cat, root_directory, prob_pos,
@@ -412,29 +412,23 @@ if __name__ == "__main__":
     random.seed(0)
     routine_sentence, names, peoples, city_net, loc_map, activity_cat, root_directory, prob_pos, pos_map, map_pos, track_datas, cat = setup(
         tag="10min_slim", city="Tokyo")
-    k = 0
+
     history_routine_counts = []
-    valid_people = [1481, 1784, 2721, 638, 7626]
     available1921 = [1004, 1032, 1172, 1184, 13, 1310, 1431, 1481, 1492, 1556, 1568, 1626, 1775, 1784, 1874, 1883,
                      1974, 2078, 225, 2266, 2337, 2356, 2402, 2513, 2542, 2610, 2680, 2683, 2721, 2956, 317, 323, 3255,
                      3282, 3453, 3534, 3599, 3637, 3638, 3781, 3784, 4007, 4105, 439, 4396, 4768, 5252, 5326, 540,
                      5449, 5551, 573, 5765, 606, 6144, 6157, 6249, 638, 6581, 6615, 6670, 6814, 6863, 6973, 6998, 7228,
                      7259, 835, 934]
-    available2019 = [2575, 1481, 1784, 2721, 638, 7626, 1626, 7266, 1568, 2078, 2610, 1908, 2683, 1883, 3637, 225, 914,
-                     6863, 6670, 323,
-                     3282, 2390, 2337, 4396, 7259, 1310, 5849, 3802, 1522, 1219, 1004, 4105, 540, 827, 2620, 3534, 930,
-                     6157, 1556, 2266,
-                     13, 1874, 317, 2513, 3255, 934, 3599, 1775, 606, 3033, 3784, 5252, 3365, 6581, 6814, 5551, 5449,
-                     6171, 5326,
-                     2831, 3453, 3781, 2402, 4843, 439, 1172, 3501, 1032, 2542, 1184, 1531, 6615, 7228, 1492, 4007,
-                     4987, 6204, 6693, 6973,
-                     4057, 67, 2680, 2956, 3138, 3638, 5765, 835, 1431, 6249, 6998, 573, 884, 1974, 6144, 6156, 4768,
-                     2356, 6463]
+    available2019 = [2575, 1481, 1784, 2721, 638,  7626, 1626, 7266, 1568, 2078, 2610, 1908, 2683, 1883, 3637, 225,  914,
+                     6863, 6670, 323,  3282, 2390, 2337, 4396, 7259, 1310, 5849, 3802, 1522, 1219, 1004, 4105, 540,  827,
+                     6157, 1556, 2266, 13,   1874, 317,  2513, 3255, 934,  3599, 1775, 606,  3033, 3784, 5252, 3365, 6581,
+                     6171, 5326, 2831, 3453, 3781, 2402, 4843, 439,  1172, 3501, 1032, 2542, 1184, 1531, 6615, 7228, 1492,
+                     4987, 6204, 6693, 6973, 4057, 67,   2680, 2956, 3138, 3638, 5765, 835,  1431, 6249, 6998, 573,  884,
+                     2356, 6463, 930,  3534, 6814, 5551, 5449, 6144, 6156, 4768, 2620, 4007, 1974]
     available2021 = [1481, 1784, 2721, 638, 7626, 13, 47, 107, 225, 323, 392, 413, 439, 540, 572, 606, 638, 643, 789,
-                     1032, 1172, 1345, 1481, 1503, 1556, 1568, 1626, 1745, 1775,
+                     1032, 1172, 1345, 1481, 1503, 1556, 1568, 1626, 1745, 1775, 6863, 7015, 7068, 7626, 7936,
                      1784, 1874, 1883, 1920, 2078, 2337, 2482, 2513, 2610, 2650, 2721, 2956, 3282, 3494, 3599, 3638,
-                     3656, 4105, 4396, 4768, 4947, 5106, 5252, 5326, 6027, 6144, 6204, 6581, 6697,
-                     6863, 7015, 7068, 7626, 7936, 7982]
+                     3656, 4105, 4396, 4768, 4947, 5106, 5252, 5326, 6027, 6144, 6204, 6581, 6697, 7982]
     for k in available2019:
         print("Person: " + str(k), peoples[k])
         history_routine = routine_sentence[peoples[k]]
@@ -442,12 +436,14 @@ if __name__ == "__main__":
         history_routine_long = []
 
         for i in range(len(history_routine_)):
+            # select experiment data
             if "2020" in history_routine_[i] or "2021" in history_routine_[i] or "2022" in history_routine_[i]:
                 continue
             tuples = re.findall(r'\(([^)]+)', history_routine_[i])
             tuples = [tuple(map(float, t.split(','))) for t in tuples]
             flag = 0
             for coordinate in tuples:
+                # Do not use location data that is too far from Tokyo
                 if haversine(coordinate[0], coordinate[1], coordinate_tokyo[0], coordinate_tokyo[1]) > 100.:
                     flag = 1
                     break
@@ -456,12 +452,8 @@ if __name__ == "__main__":
             if len(history_routine_[i].split(": ")[-1].split(", ")) > 10:
                 history_routine_long.append(history_routine_[i])
         history_routine_counts.append(len(history_routine_long))
-        if len(history_routine_long) > 30:
-            valid_people.append(k)
 
         history_routine = "\n".join(history_routine_long)
-
-        is_finetune = False
 
         P = Person(name=names[k], model=LLM(), city_area=city_net, loc_map=loc_map,
                    history_routine=history_routine, activity_cat=activity_cat,
