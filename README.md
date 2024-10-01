@@ -2,10 +2,11 @@
 [![Code License](https://img.shields.io/badge/Code%20License-Apache_2.0-green.svg)](https://github.com/agiresearch/OpenAGI/blob/main/LICENSE)
 
 
-# Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation
+# (NeurIPS' 24) Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation
 
 ## 📖 Description
-This repository is the implemetation of LLMob from [Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation](https://arxiv.org/abs/2402.14744). 
+Welcome to the official implementation of **LLMob**, as described in our paper *[Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation](https://arxiv.org/abs/2402.14744)*. This project demonstrates how Large Language Models (LLMs) can be leveraged to generate personal mobility trajectories based on real-world data.
+ 
 LLMob is a simple framework that takes advantage of Large Language Models (LLMs) for personal activity trajectory generation.
 
 <p align="center">
@@ -37,8 +38,7 @@ https://github.com/Wangjw6/LLMob.git
 cd LLMob
 conda env create -f environment.yml
 conda activate llm
-cd simulator/engine/
-python person.py
+python run_anonymized.py 
 ```
 
 ## 📚 BibTex Citation
@@ -55,11 +55,11 @@ If you would like to cite our code or paper, please use:
 ```
 
 ## 🌷 Acknowledgments
-
-This project refers to several open-source ChatGPT application:
+Our implementation adapts several open-source ChatGPT application and have extensively modified it to our purposes. We thank the authors for sharing their implementations and related resources:
 
 - [Generative Agents: Interactive Simulacra of Human Behavior](https://github.com/joonspk-research/generative_agents)
 
 - [MetaGPT](https://github.com/geekan/MetaGPT/tree/main)
 
-The raw data used in this project is from [Foursquare API](https://location.foursquare.com/developer/).
+The raw data used in this project is from [Foursquare API](https://location.foursquare.com/developer/). 
+We select and process the data with enough records before using it in our project.

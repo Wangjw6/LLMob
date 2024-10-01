@@ -3,19 +3,17 @@ from miscs.utils import *
 from simulator.engine.functions.helper import *
 import os
 from simulator.engine.evaluation.metrics import *
-if os.name == 'nt':
-    root_directory = "../"
-else:
-    root_directory = "/home/jiaweiwang/llm/simulator/"
 
+root_directory = "./simulator/"
 
-def pisc(person, candidate_num=10, neg_routines=None):
+def pisc(person, candidate_num=10):
+    neg_routines = person.neg_routines
     i_template = root_directory + "/prompt_template/final_version/init.txt"
     role_template = root_directory + "/prompt_template/final_version/roles.txt"
     infer_role_template = root_directory + "/prompt_template/final_version/init_role.txt"
     e_template1 = root_directory + "/prompt_template/final_version/eval.txt"
     # extract the basic information of the person from the history routine
-    domain_knowledge = extract_knowledge(person)
+    domain_knowledge = person.domain_knowledge #extract_knowledge(person)
     roles = {}
     demo = ""
     with open(role_template, 'r') as file:
@@ -58,6 +56,7 @@ def pisc(person, candidate_num=10, neg_routines=None):
             answers = first2second(answers)
             person.attribute = answers
             att_hub.append(answers)
+
         except:
             continue
     scores_dict = score_from_rating(person, att_hub, e_template1, metric="rate", neg_routines=neg_routines)
@@ -83,7 +82,7 @@ def score_from_rating(person, att_hub, e_template, metric="binary", neg_routines
     for att in att_hub:
         r += 1
         for i in range(min(30, len(person.train_routine_list))):
-            train_route = shorten_representative_routine_string(person.train_routine_list[i], person.loc_map)
+            train_route = person.train_routine_list[i]#shorten_representative_routine_string(person.train_routine_list[i], person.loc_map)
             date_str = train_route.split(": ")[0].split(" ")[-1]
             train_route = train_route.split(": ")[-1]
             curr_input = [att, train_route]
@@ -129,9 +128,9 @@ def score_from_rating(person, att_hub, e_template, metric="binary", neg_routines
                 except:
                     continue
                 break
-        if neg_routines is not None:
-            for i in range(len(neg_routines)):
-                train_route = shorten_representative_routine_string(neg_routines[i], person.loc_map)
+        if person.neg_routines is not None:
+            for i in range(len(person.neg_routines)):
+                train_route = person.neg_routines[i]#shorten_representative_routine_string(neg_routines[i], person.loc_map)
                 date_str = train_route.split(": ")[0].split(" ")[-1]
 
                 train_route = train_route.split(": ")[-1]
@@ -183,35 +182,3 @@ def score_from_rating(person, att_hub, e_template, metric="binary", neg_routines
     return scores_dict
 
 
-def score_from_metric(person, att_hub, e_template, metric="DTW"):
-    scores_dict = {}
-    for att in att_hub:
-        for i in range(len(person.train_routine_list)):
-            train_route = shorten_representative_routine_string(person.train_routine_list[i], person.loc_map)
-            train_route = train_route.split(": ")[-1]
-            curr_input = [att, train_route]
-            prompt = generate_prompt(curr_input, e_template)
-            while True:
-                contents = execute_prompt(prompt, person.llm,
-                                          objective=f"eval...")
-                try:
-                    res = json.loads(contents)['record']
-                except:
-                    contents_utf8 = res.response.encode('utf-8')
-                    contents_utf8 = contents_utf8.decode('utf-8')
-                    res = json.loads(contents_utf8)['record']
-                try:
-                    if metric == "DTW":
-                        res_ = get_route_numeric(res, person.map_loc)
-                        train_route_ = get_route_numeric(train_route, person.map_loc)
-                        score = DTWDistance(res_, train_route_)
-                    if metric == "embed":
-                        score = semantic_similarity_bert(train_route, ','.join(res)).cpu().numpy().reshape(-1)[0]
-                    if att not in scores_dict:
-                        scores_dict[att] = [score]
-                    else:
-                        scores_dict[att].append(score)
-                except AssertionError as e:
-                    print(e)
-                    continue
-                break

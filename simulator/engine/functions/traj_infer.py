@@ -1,4 +1,3 @@
-import pickle
 from simulator.engine.functions.prompt_paths import *
 from simulator.engine.functions.helper import *
 from simulator.gpt_structure import *
@@ -6,24 +5,18 @@ from miscs.utils import *
 from simulator.engine.memory.retrieval_helper import *
 import os
 
-METRIC = "mat"
-if os.name == 'nt':
-    root_directory = "../"
-else:
-    root_directory = "/home/jiaweiwang/llm/simulator/"
 
+root_directory = "./simulator/"
 
-def plan_new_day(person, sample_num=1):
+def plan_new_day(person, sample_num=1, mode=0):
     infer_template = root_directory + "prompt_template/final_version/one-shot_infer_mot.txt"
-    # TODO there are three templates: 0 for learning based reterieved, 1 for evolving based reterieved, 2 to be made
-    describe_mot_template = root_directory + motivation_infer_prompt_paths[0]
-    motivation_ways = ["Following are the thing you focus in the last few days:",
-                       "Following are the motivation that you want to achieve:"]
-    path = f"E:/llm report/exp20231226/tokyo_normal_normal/{str(person.id)}/"
-    folder_number = 302
-    folder_path = os.path.join(path, str(folder_number))
+    # mode = 0 for learning based retrieval, 1 for evolving based retrieval
+    describe_mot_template = root_directory + motivation_infer_prompt_paths[mode]
+    motivation_ways = ["Following are the motivation that you want to achieve:",
+                       "Following are the thing you focus in the last few days:"
+                       ]
 
-    print(f"folder name: {folder_number}")
+    folder_path = root_directory + f"/{str(person.id)}/"
     if os.path.exists(folder_path) is False:
         os.makedirs(folder_path)
 
@@ -48,28 +41,30 @@ def plan_new_day(person, sample_num=1):
 
             # get motivation
             consecutive_past_days = check_consecutive_dates(his_routine, date_)
-
-            # evolving based retrieved
-            # demo = his_routine[-1] #shorten_representative_routine_string(retrieve_route[0], person.loc_map)
-
-            # learning based retrieved
-            retrieve_route = person.retriever.retrieve(date_)
-            his_date_ = retrieve_route[0].split(": ")[0].split(" ")[-1]
-            flag = 0
+            if mode == 0:
+                # learning based retrieved
+                retrieve_route = person.retriever.retrieve(date_)
+                print("retrieve_route: ", retrieve_route[0])
+                demo = retrieve_route[0]
+            else:
+                # evolving based retrieved
+                demo = his_routine[-1]
+            # flag = 0
+            # Specify the pandemic period prompt
+            # his_date_ = retrieve_route[0].split(": ")[0].split(" ")[-1]
             # if is_date_in_range(his_date_, [2021,1,7], [2021,3,21]) or is_date_in_range(his_date_, [2021,4,25], [2021,6,20]) or is_date_in_range(his_date_, [2021,7,12], [2021,9,30]):
             #     flag = 1
             #     hint="**Now it is the pandemic period in your city. The government is declaring a state of emergency. Think about the current situation.** "#"Now it is the pandemic period and government has asked that residents to postpone travel and events and to telecommute as much as possible. "
             # else:
             #     hint = ""
             hint = ""
-            print("retrieve_route: ", retrieve_route[0])
-            demo = shorten_representative_routine_string(retrieve_route[0], person.loc_map)
+            # shorten_representative_routine_string(retrieve_route[0], person.loc_map)
             curr_input = [person.attribute, "Go to " + demo.split(": ")[-1], consecutive_past_days, hint]
 
             prompt = generate_prompt(curr_input, describe_mot_template)
 
             try:
-                area = reterieve_loc(person, demo)
+                area = retrieve_loc(person, demo)
             except:
                 assert False
 
@@ -83,7 +78,8 @@ def plan_new_day(person, sample_num=1):
 
             hint = ""
             if motivation is not None:
-                curr_input = [person.attribute, motivation, date_, ',  '.join(area), weekday, demo, motivation_ways[1],
+                curr_input = [person.attribute, motivation, date_, ',  '.join(area), weekday, demo,
+                              motivation_ways[mode],
                               hint]
 
             prompt = generate_prompt(curr_input, infer_template)
@@ -106,10 +102,10 @@ def plan_new_day(person, sample_num=1):
             print("Motivation: ", motivation)
             print("Real: ", test_route)
 
-            reals[date_] = shorten_representative_routine_string(test_route, person.loc_map)
+            reals[date_] = test_route  # shorten_representative_routine_string(test_route, person.loc_map)
             results[date_] = f"Activities at {date_}: " + ', '.join(res["plan"])
             person.retriever.nodes.append(reals[date_])
-            continue
+
 
     print(folder_path)
-    return results, reals, np.mean(scores), prompts
+

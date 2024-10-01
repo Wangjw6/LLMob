@@ -105,13 +105,10 @@ def map_traj2mat(traj, class_loc_map, act_map):
     traj_ = traj.split(" at ")
     i = 0
     while i < len(traj_)-1:
-        loc = traj_[i].split(" (")[0]
+        loc = traj_[i].split("#")[0]
         time_str = traj_[i+1]
-        try:
-            act_class = class_loc_map[loc]
-        except:
-            print(traj_)
-            assert False, loc
+        act_class = class_loc_map[loc]
+
 
         time_obj = None
         try:

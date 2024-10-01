@@ -162,95 +162,6 @@ def extract_knowledge(person):
 from datetime import timedelta
 
 
-def agent1_infer(person, date, total_interval=144, temperatures=None):
-    # agent 1
-    if temperatures is None:
-        temperatures = [0.2, 0.2, 2., 0.2]
-    is_weekend = datetime.strptime(date, '%Y-%m-%d').weekday() >= 5
-    begin_trip_counts = person.begin_time_counts[is_weekend]
-    st_counts = person.st_counts[is_weekend]
-    next_loc_counts = person.next_loc_counts[is_weekend]
-    begin_time = np.random.choice([i for i in range(total_interval)],
-                                  p=softmax(begin_trip_counts, temperature=temperatures[0]).reshape(-1, ))
-
-    if begin_time < 48:
-        print()
-    time_list = [begin_time]
-    location = np.random.choice([i for i in range(len(person.map_pos) - 1)],
-                                p=softmax(st_counts[begin_time, :-1].reshape(1, -1), temperature=temperatures[1]).reshape(-1, ))
-    for tt in range(144):
-        assert np.sum(st_counts[tt, :-1]) >= begin_trip_counts[0, tt], f"{np.sum(st_counts[tt, :-1])} {begin_trip_counts[0, tt]}, {tt}"
-
-    location_list = [location]
-    while True:
-
-        next_location = np.random.choice([i for i in range(len(person.map_pos) + 1)],
-                                         p=softmax(next_loc_counts[location].reshape(1, -1),
-                                                   temperature=temperatures[2]).reshape(-1, ))
-
-        if next_location >= len(person.map_pos) - 1 or time_list[-1] + 1 >= total_interval:
-            break
-        assert st_counts[time_list[-1] + 1:, next_location].shape[0] == total_interval - time_list[
-            -1] - 1, f"{st_counts[time_list[-1] + 1:, next_location].shape[0]} {total_interval - time_list[-1]}"
-        next_location_time = np.random.choice(
-            [i + time_list[-1] + 1 for i in range(total_interval - time_list[-1] - 1)],
-            p=softmax(st_counts[time_list[-1] + 1:, next_location].reshape(1, -1),
-                      temperature=temperatures[3]).reshape(-1, ))
-        # print(np.argmax(next_loc_counts[location].reshape(1, -1)))
-        location_list.append(next_location)
-        time_list.append(next_location_time)
-
-    time_location_pairs = list(zip(time_list, location_list))
-    plan = [f"{person.map_pos[loc]} at {change_interval_to_time(t)}" for t, loc in time_location_pairs]
-    return plan
-
-def agent2_infer(person, date, total_interval=144, temperatures=None):
-    # agent 1
-    if temperatures is None:
-        temperatures = [0.2, 0.2, 2., 0.2]
-    is_weekend = datetime.strptime(date, '%Y-%m-%d').weekday() >= 5
-    begin_trip_counts = person.begin_time_counts[is_weekend]
-    end_trip_counts = person.end_time_counts[is_weekend]
-    st_counts = person.st_counts[is_weekend]
-    next_loc_counts = person.next_loc_counts[is_weekend]
-    begin_time = np.random.choice([i for i in range(total_interval)],
-                                  p=softmax(begin_trip_counts, temperature=temperatures[0]).reshape(-1, ))
-    end_time = np.random.choice([i+begin_time for i in range(total_interval-begin_time)],
-                                p=softmax(end_trip_counts[0, begin_time:].reshape(1,-1),
-                                          temperature=temperatures[0]).reshape(-1, ))
-
-    time_list = [begin_time]
-    location = np.random.choice([i for i in range(len(person.map_pos) - 1)],
-                                p=softmax(st_counts[begin_time, :-1].reshape(1, -1),
-                                          temperature=temperatures[1]).reshape(-1, ))
-
-
-    location_list = [location]
-    while True:
-
-        next_location = np.random.choice([i for i in range(len(person.map_pos) + 1)],
-                                         p=softmax(next_loc_counts[location].reshape(1, -1),
-                                                   temperature=temperatures[2]).reshape(-1, ))
-
-        if next_location >= len(person.map_pos) - 1 or time_list[-1] + 1 >= total_interval:
-            break
-        assert st_counts[time_list[-1] + 1:, next_location].shape[0] == total_interval - time_list[
-            -1] - 1, f"{st_counts[time_list[-1] + 1:, next_location].shape[0]} {total_interval - time_list[-1]}"
-        next_location_time = np.random.choice(
-            [i + time_list[-1] + 1 for i in range(total_interval - time_list[-1] - 1)],
-            p=softmax(st_counts[time_list[-1] + 1:, next_location].reshape(1, -1),
-                      temperature=temperatures[3]).reshape(-1, ))
-        if next_location_time >= end_time:
-            location_list.append(next_location)
-            time_list.append(end_time)
-            break
-        # print(np.argmax(next_loc_counts[location].reshape(1, -1)))
-        location_list.append(next_location)
-        time_list.append(next_location_time)
-
-    time_location_pairs = list(zip(time_list, location_list))
-    plan = [f"{person.map_pos[loc]} at {change_interval_to_time(t)}" for t, loc in time_location_pairs]
-    return plan
 
 def change_interval_to_time(t, interval=10):
     time_duration = timedelta(minutes=int(t) * interval)
@@ -261,18 +172,6 @@ def change_interval_to_time(t, interval=10):
     formatted_time = f'{hours:02d}:{minutes:02d}'
     return formatted_time
 
-
-# def calculate_intervals_to_midnight(times, interval=10):
-#     midnight = datetime.strptime('00:00:00', '%H:%M:%S')
-#     intervals = []
-#     for time in times:
-#         current_time = datetime.strptime(time.strip('.'), '%H:%M:%S')
-#         # Calculate the time difference in seconds and convert to minutes
-#         time_diff_minutes = (current_time - midnight).seconds / 60
-#         # Calculate the number of 10-minute intervals
-#         number_of_intervals = time_diff_minutes // interval
-#         intervals.append(int(number_of_intervals))
-#     return intervals
 
 import re
 def clean_traj(traj):
@@ -332,12 +231,10 @@ def calculate_intervals_to_midnight(times, interval=10):
     return intervals
 
 def valid_generation(person, traj):
-    loc_map = person.loc_map
-    map_loc = {v: k for k, v in loc_map.items()}
+
     cat = person.cat
     traj_acts = clean_traj(traj)
     loc_times = traj_acts.split(" at ")
-    pos_map = person.pos_map
     locs = []
     times = []
     acts = []
@@ -377,25 +274,6 @@ def valid_generation(person, traj):
     assert len(locs) == len(times), locs
     assert len(acts) == len(times), locs
     assert len(locs) > 0
-    times_interval = calculate_intervals_to_midnight(times)
-    traj_id, traj_lat_lng, traj_act_t = [], [], []
-    for i in range(len(locs)):
-        if "Home" in locs[i] or "home" in locs[i]:
-            continue
-        try:
-            loc_with_lat_lng = map_loc[locs[i].strip()]
-        except:
-            print(locs[i])
-            print(traj)
-            assert False
-
-        #             print(loc_with_lat_lng)
-        loc_with_lat_lng_ = loc_with_lat_lng.replace(" (", ", ")
-        loc_with_lat_lng_ = loc_with_lat_lng_.replace(")", "")
-        #             print(loc_with_lat_lng_)
-        lat_lng = [float(loc_with_lat_lng_.split(", ")[1]), float(loc_with_lat_lng_.split(", ")[2])]
-        loc_id = pos_map[loc_with_lat_lng]
-        t = times_interval[i]
 
     return True
 

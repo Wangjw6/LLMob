@@ -43,11 +43,9 @@ class ContrastiveDataset(Dataset):
         self.num_pairs = num_pairs
         self.eval_pairs = []
         self.class_id_map = class_id_map
-        try:
-            self._create_pairs()
-        except Exception as e:
-            print(f"Error processing: {e}")
-            assert False
+
+        self._create_pairs()
+
 
     def _create_pairs(self):
         scores = np.zeros((len(self.data), len(self.data))) - 100.

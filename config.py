@@ -25,7 +25,6 @@ class NotConfiguredException(Exception):
 
 class Config(metaclass=Singleton):
     """
-    常规使用方法：
     config = Config("config.yaml")
     secret_key = config.get_key("MY_SECRET_KEY")
     print("Secret key:", secret_key)

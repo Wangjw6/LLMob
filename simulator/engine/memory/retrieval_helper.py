@@ -94,27 +94,15 @@ class TemporalRetriever:
         return
 
 
-def reterieve_loc(person, route, c="tokyo"):
-    threshold = 0.25
+def retrieve_loc(person, route, c="tokyo"):
     area = []
     loc_in_retrieve = route.split(": ")[1].replace(",", " at ").split(" at ")[::2]
     selected_loc_cat = {}
     for loc in loc_in_retrieve:
         loc = loc.lstrip().rstrip()
         c = person.loc_cat[loc.split("#")[0]]
-        try:
-            coordinate = extract_lat_log(person.map_loc[loc])
-        except:
-            continue
-        if c == "tokyo":
-            coordinate_tokyo = (35.6895, 139.6917)
-            if np.linalg.norm(np.array(coordinate) - np.array(coordinate_tokyo)) > threshold:
-                continue
         for k, v in person.area_freq.items():
             k = k.replace(".", "")
-            cand_coordinate = extract_lat_log(person.map_loc[k])
-            if np.linalg.norm(np.array(coordinate) - np.array(cand_coordinate)) > threshold:
-                continue
             if person.loc_cat[k.split("#")[0]] == c:
                 if c not in selected_loc_cat:
                     selected_loc_cat[c] = 1
