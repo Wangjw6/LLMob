@@ -92,7 +92,8 @@ def plan_new_day(person, sample_num=1, mode=0):
                 try:
                     res = json.loads(contents)
                     valid_generation(person, f"Activities at {date_}: " + ', '.join(res["plan"]))
-                except:
+                except Exception as e:
+                    print(e)
                     trial += 1
                     continue
                 break

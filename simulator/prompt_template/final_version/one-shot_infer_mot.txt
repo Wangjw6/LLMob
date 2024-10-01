@@ -16,5 +16,5 @@ Response to the prompt above in json in the *following* format:
 "reason":...}
 
 Example:
-{"plan": [Elementary School#125 at 9:10, Town Hall#489 at 12:50, Rest Area#585 at 13:40, Seafood Restaurant#105 at 14:20]
+{"plan": ["Elementary School#125 at 9:10", "Town Hall#489 at 12:50", "Rest Area#585 at 13:40", "Seafood Restaurant#105 at 14:20"]
 "reason":"My plan today is to finish my teaching duty in the morning and find something delicious to taste."}
