@@ -7,7 +7,7 @@
 ## 📖 Description
 Welcome to the official implementation of **LLMob**, as described in our paper *[Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation](https://arxiv.org/abs/2402.14744)*. This project demonstrates how Large Language Models (LLMs) can be leveraged to generate personal mobility trajectories based on real-world data.
  
-LLMob is a simple framework that takes advantage of Large Language Models (LLMs) for personal activity trajectory generation.
+LLMob is a simple framework that builds intuitive logic for LLMs in the context of personal activity trajectory generation.
 
 <p align="center">
 <img src="images/LLMob.png">
@@ -48,7 +48,7 @@ If you would like to cite our code or paper, please use:
 ```
 @article{wang2024large,
   title={Large language models as urban residents: An llm agent framework for personal mobility generation},
-  author={Wang, Jiawei and Jiang, Renhe and Yang, Chuang and Wu, Zengqing and Onizuka, Makoto and Shibasaki, Ryosuke and Xiao, Chuan},
+  author={Wang, Jiawei and Jiang, Renhe and Yang, Chuang and Wu, Zengqing and Onizuka, Makoto and Shibasaki, Ryosuke, Noboru Koshizuka and Xiao, Chuan},
   journal={arXiv preprint arXiv:2402.14744},
   year={2024}
 }
@@ -62,4 +62,4 @@ Our implementation adapts several open-source ChatGPT application and have exten
 - [MetaGPT](https://github.com/geekan/MetaGPT/tree/main)
 
 The raw data used in this project is from [Foursquare API](https://location.foursquare.com/developer/). 
-We select and process the data with enough records before using it in our project.
+We select the data with enough records and preprocess them before using in our project.
