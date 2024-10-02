@@ -15,13 +15,11 @@ class NodeWithScore:
 class DeepModel(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super(DeepModel, self).__init__()
-        # Define the layers and parameters
-        self.fc1 = nn.Linear(input_size, hidden_size)  # Input to hidden layer
-        self.relu = nn.ReLU()  # Activation function
-        self.fc2 = nn.Linear(hidden_size, output_size)  # Hidden to output layer
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_size, output_size)
 
     def forward(self, x):
-        # Define the forward pass
         x = self.fc1(x)
         x = self.relu(x)
         x = self.fc2(x)
@@ -33,7 +31,6 @@ class TemporalRetriever:
         self.nodes = nodes
         self.similarity_top_k = similarity_top_k
         self.feature_size = 3
-        # TODO calibrate weight for each person
         if is_train is not None:
             self.calibrate_dataset = ContrastiveDataset(nodes,
                                                         eval=act_mat_compute,
@@ -46,7 +43,6 @@ class TemporalRetriever:
 
     def retrieve(self, query_str):
         scored_nodes = self.get_scored_nodes(query_str)
-        # Sort and get top_k nodes, score range => 0..1, closer to 1 means more relevant
         nodes = sorted(scored_nodes, key=lambda x: x.score, reverse=True)
         retrieved_nodes = [node.node for node in nodes[: self.similarity_top_k]]
         return retrieved_nodes
