@@ -34,12 +34,13 @@ LLMob is a simple framework that builds intuitive logic for LLMs in the context 
 To get started with LLMob, follow these steps:
 
 ```bash
-https://github.com/Wangjw6/LLMob.git
+git clone https://github.com/Wangjw6/LLMob.git
 cd LLMob
 conda env create -f environment.yml
 conda activate llm
 python run_anonymized.py 
 ```
+You should also add your own OpenAI API key in the `./config/key.yaml` file.
 
 ## 📚 BibTex Citation
 
