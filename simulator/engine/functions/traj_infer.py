@@ -5,8 +5,8 @@ from miscs.utils import *
 from simulator.engine.memory.retrieval_helper import *
 import os
 
-
 root_directory = "./simulator/"
+
 
 def plan_new_day(person, sample_num=1, mode=0):
     infer_template = root_directory + "prompt_template/final_version/one-shot_infer_mot.txt"
@@ -22,7 +22,6 @@ def plan_new_day(person, sample_num=1, mode=0):
 
     for k in range(sample_num):
         results = {}
-        scores = []
         prompts = {}
         reals = {}
         motivations = {}
@@ -107,6 +106,4 @@ def plan_new_day(person, sample_num=1, mode=0):
             results[date_] = f"Activities at {date_}: " + ', '.join(res["plan"])
             person.retriever.nodes.append(reals[date_])
 
-
     print(folder_path)
-

@@ -6,6 +6,7 @@ from simulator.engine.evaluation.metrics import *
 
 root_directory = "./simulator/"
 
+
 def pisc(person, candidate_num=10):
     neg_routines = person.neg_routines
     i_template = root_directory + "/prompt_template/final_version/init.txt"
@@ -13,7 +14,7 @@ def pisc(person, candidate_num=10):
     infer_role_template = root_directory + "/prompt_template/final_version/init_role.txt"
     e_template1 = root_directory + "/prompt_template/final_version/eval.txt"
     # extract the basic information of the person from the history routine
-    domain_knowledge = person.domain_knowledge #extract_knowledge(person)
+    domain_knowledge = person.domain_knowledge  # extract_knowledge(person)
     roles = {}
     demo = ""
     with open(role_template, 'r') as file:
@@ -82,7 +83,8 @@ def score_from_rating(person, att_hub, e_template, metric="binary", neg_routines
     for att in att_hub:
         r += 1
         for i in range(min(30, len(person.train_routine_list))):
-            train_route = person.train_routine_list[i]#shorten_representative_routine_string(person.train_routine_list[i], person.loc_map)
+            train_route = person.train_routine_list[
+                i]  # shorten_representative_routine_string(person.train_routine_list[i], person.loc_map)
             date_str = train_route.split(": ")[0].split(" ")[-1]
             train_route = train_route.split(": ")[-1]
             curr_input = [att, train_route]
@@ -130,7 +132,8 @@ def score_from_rating(person, att_hub, e_template, metric="binary", neg_routines
                 break
         if person.neg_routines is not None:
             for i in range(len(person.neg_routines)):
-                train_route = person.neg_routines[i]#shorten_representative_routine_string(neg_routines[i], person.loc_map)
+                train_route = person.neg_routines[
+                    i]  # shorten_representative_routine_string(neg_routines[i], person.loc_map)
                 date_str = train_route.split(": ")[0].split(" ")[-1]
 
                 train_route = train_route.split(": ")[-1]
@@ -180,5 +183,3 @@ def score_from_rating(person, att_hub, e_template, metric="binary", neg_routines
                         continue
                     break
     return scores_dict
-
-
