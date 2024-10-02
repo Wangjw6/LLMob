@@ -69,7 +69,7 @@ class TemporalRetriever:
                 positive_scores = self._model(torch.tensor(positive_pairs).float())
                 negative_pairs = batch[:, 1:, :].reshape(-1, self.calibrate_dataset.num_pairs - 1, self.feature_size)
                 negative_scores = self._model(torch.tensor(negative_pairs).float()).reshape(batch.shape[0],
-                                                                                            -1)  # .sum(dim=1).reshape(-1, 1)
+                                                                                            -1)
 
                 logits = torch.cat([positive_scores, negative_scores], dim=1)
                 loss = -torch.log_softmax(logits, dim=1)[:, 0]
@@ -79,12 +79,11 @@ class TemporalRetriever:
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
-
         print("Calibration finished!")
-        return
 
 
-def retrieve_loc(person, route, c="tokyo"):
+
+def retrieve_loc(person, route):
     area = []
     loc_in_retrieve = route.split(": ")[1].replace(",", " at ").split(" at ")[::2]
     selected_loc_cat = {}
