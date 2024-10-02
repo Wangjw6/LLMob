@@ -14,6 +14,7 @@ import math
 import datetime
 from datetime import datetime, timedelta
 
+
 def haversine(lat1, lon1, lat2, lon2):
     # Radius of the Earth in kilometers
     R = 6371.0
@@ -29,13 +30,15 @@ def haversine(lat1, lon1, lat2, lon2):
     dlon = lon2_rad - lon1_rad
 
     # Haversine formula
-    a = math.sin(dlat / 2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2)**2
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2) ** 2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     # Distance in kilometers
     distance = R * c
 
     return distance
+
+
 def is_weekday_or_weekend(date_string):
     # Convert the input date string to a datetime object
     date = datetime.strptime(date_string, "%Y-%m-%d")
@@ -205,6 +208,7 @@ def shorten_representative_routine_string_bk(routine_string, location_map):
                 print()
     return routine_string.strip()
 
+
 def shorten_representative_routine_string(routine_string, location_map):
     for k, v in location_map.items():
         if ": " + k in routine_string:
@@ -223,6 +227,7 @@ def shorten_representative_routine_string(routine_string, location_map):
         print(routine_string)
         assert False
     return routine_string.strip()
+
 
 def prompts_to_df(prompts, scores, result):
     """Converts a list of prompts into a dataframe."""
@@ -404,6 +409,7 @@ def check_consecutive_dates(plans, date_):
     max_streak = current_streak
     return max_streak
 
+
 def count_replacements(original, replacement, test):
     # Original and replacement strings
 
@@ -416,4 +422,3 @@ def count_replacements(original, replacement, test):
     # Calculate the number of replacements
     num_replacements = (len(modified_test) - len(test)) // length_difference
     return num_replacements
-

@@ -50,7 +50,7 @@ def pisc(person, candidate_num=10):
         curr_input = [role, description, domain_knowledge, ', '.join(person.activity_area[5:]), description_first_view]
         prompt = generate_prompt(curr_input, i_template)
         contents = execute_prompt(prompt, person.llm,
-                                  objective=f"HTS...", history=None)
+                                  objective=f"Describe patterns ...", history=None)
         try:
             print(contents)
             answers = description_first_view + contents
