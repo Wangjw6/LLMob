@@ -7,7 +7,7 @@
 ## 📖 Description
 Welcome to the official implementation of **LLMob**, as described in our paper *[Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation](https://arxiv.org/abs/2402.14744)*. This project demonstrates how Large Language Models (LLMs) can be leveraged to generate personal mobility trajectories based on real-world data.
  
-LLMob is a simple framework that builds intuitive logic for LLMs in the context of personal activity trajectory generation.
+LLMob is an intuitive framework that builds reasoning logic for LLMs in the context of personal activity trajectory generation.
 
 <p align="center">
 <img src="images/LLMob.png">
