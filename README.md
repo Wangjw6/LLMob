@@ -44,12 +44,12 @@ You should also add your own OpenAI API key in the `./config/key.yaml` file.
 
 ## 📚 BibTex Citation
 
-If you would like to cite our code or paper, please use:
+If you would like to cite our work, please use:
 
 ```
 @article{wang2024large,
   title={Large language models as urban residents: An llm agent framework for personal mobility generation},
-  author={Wang, Jiawei and Jiang, Renhe and Yang, Chuang and Wu, Zengqing and Onizuka, Makoto and Shibasaki, Ryosuke, Noboru Koshizuka and Xiao, Chuan},
+  author={Wang, Jiawei and Jiang, Renhe and Yang, Chuang and Wu, Zengqing and Onizuka, Makoto and Shibasaki, Ryosuke and Koshizuka, Noboru and Xiao, Chuan},
   journal={arXiv preprint arXiv:2402.14744},
   year={2024}
 }
