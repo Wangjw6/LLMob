@@ -1,12 +1,11 @@
-<a href='https://proceedings.neurips.cc/paper_files/paper/2024/file/e142fd2b70f10db2543c64bca1417de8-Paper-Conference.pdf'><img src='https://img.shields.io/badge/Paper-NeurIPS2024-red'></a> 
-<a href='https://arxiv.org/pdf/2402.14744'><img src='https://img.shields.io/badge/Paper-Arxiv-orange'></a> 
+<a href='https://arxiv.org/abs/2304.04370'><img src='https://img.shields.io/badge/Paper-PDF-red'></a> 
 [![Code License](https://img.shields.io/badge/Code%20License-Apache_2.0-green.svg)](https://github.com/agiresearch/OpenAGI/blob/main/LICENSE)
 
 
 # (NeurIPS' 24) Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation
 
 ## 📖 Description
-Welcome to the official implementation of **LLMob**, as described in **our NeurIPS'24 paper** *[Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation](https://proceedings.neurips.cc/paper_files/paper/2024/hash/e142fd2b70f10db2543c64bca1417de8-Abstract-Conference.html)*. This project demonstrates how Large Language Models (LLMs) can be leveraged to generate personal mobility trajectories based on real-world data.
+Welcome to the official implementation of **LLMob**, as described in our paper *[Large Language Models as Urban Residents: An LLM Agent Framework for Personal Mobility Generation](https://arxiv.org/abs/2402.14744)*. This project demonstrates how Large Language Models (LLMs) can be leveraged to generate personal mobility trajectories based on real-world data.
  
 LLMob is an intuitive framework that builds reasoning logic for LLMs in the context of personal activity trajectory generation.
 
@@ -24,36 +23,11 @@ LLMob is an intuitive framework that builds reasoning logic for LLMs in the cont
 
 
 ## ⭐ Key Components
-- **/engine/agent.py**: Generate personal activity trajectory according to real-world check-in data.
-- **/engine/persona_identify.py**: Phase 1 Self-consistent activity pattern identification.
-- **/engine/trajectory_generate.py**: Phase 2 Activity generation based on Identified Pattern and Motivation.
-- **/engine/utilities/retrieval_helper.py**: Function related to learning based motivation retrieval.
-- **/prompt_template**: Prompt template used in this project.
-
-
-## 📦 Data
-
-### Trajectory Data
-- **`/data/2019/`**: Personal trajectories from 2019.  
-- **`/data/2021/`**: Personal trajectories from 2021.  
-- **`/data/20192021/`**: Combined trajectories from 2019 and 2021.
-
-### Mapping Files
-- **`/data/loc_map.pkl`**:  
-  Maps each unique location to a name and unique ID.  
-  - Key: `location name + latitude + longitude`  
-  - Value: `location name + unique ID`
-
-- **`/data/pos_map.pkl`**:  
-  Maps each unique location to a node ID in the city network.  
-  - Key: `location name + latitude + longitude`  
-  - Value: `city network node ID`
-
-- **`/data/location_activity_map.pkl`**:  
-  Maps locations to activity categories (from Foursquare).  
-  - Key: `location name`  
-  - Value: `activity category`
-
+- **./simulator/engine/person.py**: Generate personal activity trajectory according to real-world check-in data.
+- **./simulator/engine/functions/traj_infer.py**: Personal activity trajectory generation function.
+- **./simulator/engine/functions/PISC.py**: Personal activity pattern identification function.
+- **./simulator/engine/memory/retrieval_helper.py**: Function related to motivation retrieval.
+- **./simulator/prompt_template**: Prompt template used in this project.
 
 ## ⚙️ Usage
 
@@ -64,17 +38,7 @@ git clone https://github.com/Wangjw6/LLMob.git
 cd LLMob
 conda env create -f environment.yml
 conda activate llm
-# Run the LLMob agent to generate 2019 data then evaluate, mode 0 for learning based retrieval, 1 for evolving based retrieval
-python generate.py --dataset 2019 --mode 1 
-python evaluate.py --dataset 2019 --mode 1 
-
-# Run the LLMob agent to generate 2021 data then evaluate, mode 0 for learning based retrieval, 1 for evolving based retrieval
-python generate.py --dataset 2021 --mode 1 
-python evaluate.py --dataset 2021 --mode 1 
-
-# Run the LLMob agent to generate 2021 data based on 2019 data then evaluate, mode 0 for learning based retrieval, 1 for evolving based retrieval
-python generate.py --dataset 20192021 --mode 1 
-python evaluate.py --dataset 20192021 --mode 1 
+python run_anonymized.py 
 ```
 You should also add your own OpenAI API key in the `./config/key.yaml` file.
 
@@ -83,12 +47,10 @@ You should also add your own OpenAI API key in the `./config/key.yaml` file.
 If you would like to cite our work, please use:
 
 ```
-@article{jiawei2024large,
+@article{wang2024large,
   title={Large language models as urban residents: An llm agent framework for personal mobility generation},
-  author={JIAWEI, WANG and Jiang, Renhe and Yang, Chuang and Wu, Zengqing and Shibasaki, Ryosuke and Koshizuka, Noboru and Xiao, Chuan and others},
-  journal={Advances in Neural Information Processing Systems},
-  volume={37},
-  pages={124547--124574},
+  author={Wang, Jiawei and Jiang, Renhe and Yang, Chuang and Wu, Zengqing and Onizuka, Makoto and Shibasaki, Ryosuke and Koshizuka, Noboru and Xiao, Chuan},
+  journal={arXiv preprint arXiv:2402.14744},
   year={2024}
 }
 ```

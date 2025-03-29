@@ -1,3 +1,8 @@
-OPENAI_API_KEY: "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"
+<<<<<<< HEAD
+OPENAI_API_KEY: ""
 OPENAI_API_MODEL: "gpt-4o-mini"
+=======
+global_proxy: ""
+OPENAI_API_KEY: ""
+>>>>>>> parent of 1f4e656 (update the experiment entry)
 
