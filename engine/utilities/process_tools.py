@@ -1,14 +1,67 @@
 import numpy as np
 from geopy.distance import geodesic
 import pandas as pd
+from datetime import datetime
+
+import json
+import os
+import re
+import time
+
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+from scipy.stats import multivariate_normal
+from collections import Counter
+import math
+import datetime
+from datetime import datetime, timedelta
 
 
-def softmax(x, temperature=2.):
-    """Compute softmax values for each set of scores in x."""
-    x = x / temperature
-    e_x = np.exp(x - np.max(x, axis=1, keepdims=True))  # Shift for numerical stability
-    return e_x / np.sum(e_x, axis=1, keepdims=True)
+def is_weekday_or_weekend(date_string):
+    # Convert the input date string to a datetime object
+    date = datetime.strptime(date_string, "%Y-%m-%d")
+    day_of_week = date.weekday()
 
+    if day_of_week < 5:
+        return 0
+    else:
+        return 1
+
+
+def find_detail_weekday(date_string):
+    if is_weekday_or_weekend(date_string) == 0:
+        return "weekday"
+    else:
+        return "weekend"
+
+
+def first2second(words):
+    words = words.replace("I ", "You ")
+    words = words.replace(", I ", ", you ")
+    words = words.replace(". I ", ". You ")
+    words = words.replace(" I ", " you ")
+    words = words.replace("my ", "your ")
+    words = words.replace(" am ", " are ")
+    words = words.replace("My ", "Your ")
+    words = words.replace(" me ", " you ")
+    words = words.replace(" myself ", " yourself ")
+    return words
+
+
+def check_consecutive_dates(plans, date_):
+    # Check for consecutive days in reverse order and break once a non-consecutive day is found
+    dates = [datetime.strptime(activity.split(":")[0].split("at")[1].strip(), "%Y-%m-%d") for activity in plans]
+    dates.append(datetime.strptime(date_, "%Y-%m-%d"))
+    current_streak = 1
+    for i in range(len(dates) - 1, 0, -1):
+        if dates[i] - dates[i - 1] == timedelta(days=1):
+            current_streak += 1
+        else:
+            break  # Break once a non-consecutive day is found
+    max_streak = current_streak
+    return max_streak
 
 
 def commute_loc(route):
@@ -159,21 +212,9 @@ def extract_knowledge(person):
     return prompt
 
 
-from datetime import timedelta
-
-
-
-def change_interval_to_time(t, interval=10):
-    time_duration = timedelta(minutes=int(t) * interval)
-    # Extract hours and minutes
-    hours, remainder = divmod(time_duration.seconds, 3600)
-    minutes = remainder // 60
-    # Format the time
-    formatted_time = f'{hours:02d}:{minutes:02d}'
-    return formatted_time
-
-
 import re
+
+
 def clean_traj(traj):
     acts = traj.split(": ")[-1]
     acts = acts.replace(", ", " at ")
@@ -204,34 +245,14 @@ def clean_traj(traj):
     acts = acts.replace("Lunch at ", "")
     acts = acts.replace("Lunch Break ", "Sandwich Shop#1 ")
     acts = acts.replace("Office District", "Office")
-
     acts = acts.replace("Head to ", "")
     acts = acts.replace("Savor ", "")
     acts = acts.replace("Discover ", "")
-    if len(acts)==0:
-        print(55)
+
     return acts
 
-from datetime import datetime
-def calculate_intervals_to_midnight(times, interval=10):
-    midnight = datetime.strptime('00:00:00', '%H:%M:%S')
-    intervals = []
-    for time in times:
-        if time.strip('.') == "24:00":
-            time =  "23:59"
-        try:
-            current_time = datetime.strptime(time.strip('.'), '%H:%M:%S')
-        except:
-            current_time = datetime.strptime(time.strip('.'), '%H:%M')
-        # Calculate the time difference in seconds and convert to minutes
-        time_diff_minutes = (current_time - midnight).seconds / 60
-        # Calculate the number of 10-minute intervals
-        number_of_intervals = time_diff_minutes // interval
-        intervals.append(int(number_of_intervals))
-    return intervals
 
 def valid_generation(person, traj):
-
     cat = person.cat
     traj_acts = clean_traj(traj)
     loc_times = traj_acts.split(" at ")
@@ -245,7 +266,7 @@ def valid_generation(person, traj):
         if k % 2 == 0:
             try:
                 clean_loc = loc_times[k]
-            except:
+            except Exception as e:
                 clean_loc = clean_loc.split("#")[0] + str(1)
                 print(clean_loc)
             if "Home" in clean_loc or "home" in clean_loc:
@@ -276,6 +297,3 @@ def valid_generation(person, traj):
     assert len(locs) > 0
 
     return True
-
-
-

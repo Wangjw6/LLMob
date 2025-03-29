@@ -5,17 +5,9 @@ from functools import wraps
 from typing import NamedTuple
 
 import openai
-
-from config import CONFIG
-from logs import logger
-from simulator.engine.base_gpt_api import BaseGPTAPI
-from utils import Singleton
-from simulator.tools.token_counter import (
-    TOKEN_COSTS,
-    count_message_tokens,
-    count_string_tokens,
-    get_max_completion_tokens,
-)
+from engine.llm_configs.config import CONFIG
+from engine.llm_configs.base_gpt_api import BaseGPTAPI
+from engine.llm_configs.config import Singleton
 
 
 def retry(max_retries):
@@ -52,8 +44,7 @@ class RateLimiter:
         elapsed_time = current_time - self.last_call_time
 
         if elapsed_time < self.interval * num_requests:
-            remaining_time = self.interval * num_requests - elapsed_time
-            logger.info(f"sleep {remaining_time}")
+            remaining_time = self.interval * num_requests - elapsed_tim
             await asyncio.sleep(remaining_time)
 
         self.last_call_time = time.time()
@@ -75,26 +66,6 @@ class CostManager(metaclass=Singleton):
         self.total_cost = 0
         self.total_budget = 0
 
-    def update_cost(self, prompt_tokens, completion_tokens, model):
-        """
-        Update the total cost, prompt tokens, and completion tokens.
-
-        Args:
-        prompt_tokens (int): The number of tokens used in the prompt.
-        completion_tokens (int): The number of tokens used in the completion.
-        model (str): The model used for the API call.
-        """
-        self.total_prompt_tokens += prompt_tokens
-        self.total_completion_tokens += completion_tokens
-        cost = (prompt_tokens * TOKEN_COSTS[model]["prompt"] + completion_tokens * TOKEN_COSTS[model][
-            "completion"]) / 1000
-        self.total_cost += cost
-        if self.total_cost > CONFIG.max_budget * 0.5:
-            logger.info(
-                f"Total running cost: ${self.total_cost:.3f} | Max budget: ${CONFIG.max_budget:.3f} | "
-                f"Current cost: ${cost:.3f}, prompt_tokens: {prompt_tokens}, completion_tokens: {completion_tokens}"
-            )
-        CONFIG.total_cost = self.total_cost
 
     def get_total_prompt_tokens(self):
         """
@@ -166,66 +137,27 @@ class OpenAIGPTAPI(BaseGPTAPI, RateLimiter):
         print()
 
         full_reply_content = "".join([m.get("content", "") for m in collected_messages])
-        usage = self._calc_usage(messages, full_reply_content)
-        self._update_costs(usage)
         return full_reply_content
 
     def _cons_kwargs(self, messages) -> dict:
-        if CONFIG.openai_api_type == "azure":
-            kwargs = {
-                "deployment_id": CONFIG.deployment_id,
-                "messages": messages,
-                "max_tokens": self.get_max_tokens(messages),
-                "n": 1,
-                "stop": None,
-                "temperature": 0.3,
-            }
-        else:
-            kwargs = {
-                "model": self.model,
-                "messages": messages,
-                "max_tokens": self.get_max_tokens(messages),
-                "n": 1,
-                "stop": None,
-                "temperature": 0.8,
-            }
+        kwargs = {
+            "model": self.model,
+            "messages": messages,
+            "max_tokens": 4096,
+            "n": 1,
+            "stop": None,
+            "temperature": 0.8,
+        }
         return kwargs
 
     async def _achat_completion(self, messages) -> dict:
         rsp = await self.llm.ChatCompletion.acreate(**self._cons_kwargs(messages))
-        self._update_costs(rsp.get("usage"))
         return rsp
 
     def chat_completion(self, messages) -> dict:
         rsp = self.llm.ChatCompletion.create(**self._cons_kwargs(messages))
-        self._update_costs(rsp["usage"])
         return rsp
-        # return rsp
 
     def completion(self, messages) -> dict:
-        # if isinstance(messages[0], Message):
-        #     messages = self.messages_to_dict(messages)
         return self.chat_completion(messages)
 
-    def _calc_usage(self, messages, rsp: str) -> dict:
-        usage = {}
-        if CONFIG.calc_usage:
-            prompt_tokens = count_message_tokens(messages, self.model)
-            completion_tokens = count_string_tokens(rsp, self.model)
-            usage['prompt_tokens'] = prompt_tokens
-            usage['completion_tokens'] = completion_tokens
-        return usage
-
-    def _update_costs(self, usage: dict):
-        if CONFIG.update_costs:
-            prompt_tokens = int(usage.prompt_tokens)
-            completion_tokens = int(usage.completion_tokens)
-            self._cost_manager.update_cost(prompt_tokens, completion_tokens, self.model)
-
-    def get_costs(self) -> Costs:
-        return self._cost_manager.get_costs()
-
-    def get_max_tokens(self, messages):
-        if not self.auto_max_tokens:
-            return CONFIG.max_tokens_rsp
-        return get_max_completion_tokens(messages, self.model, CONFIG.max_tokens_rsp)

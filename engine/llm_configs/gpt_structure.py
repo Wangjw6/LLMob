@@ -8,10 +8,6 @@ import re
 from openai import OpenAI
 import openai
 import time
-from utils import *
-
-openai.api_key = openai_api_key
-
 
 def temp_sleep(seconds=0.1):
     time.sleep(seconds)
@@ -151,28 +147,17 @@ def generate_prompt(curr_input, prompt_lib_file):
     return cleaned_prompt.strip()
 
 
-def get_embedding(text: str, model="text-similarity-davinci-001", **kwargs) :
-    # replace newlines, which can negatively affect performance.
-    text = text.replace("\n", " ")
-
-    response = openai.embeddings.create(input=[text], model=model, **kwargs)
-
-    return response.data[0].embedding
-
-
 def execute_prompt(prompt, llm, objective, history=None, temperature=0.6):
     print(f"==============={objective}=========================")
 
     response = None
     while response is None:
         try:
-            # response = llm.chat_completion([{"role": "user", "content": prompt}])
             client = OpenAI()
             if history is None:
                 response = client.chat.completions.create(
                     model=llm.model,
                     messages=[
-                        # {"role": "system", "content": "You are a helpful assistant."},
                         {"role": "user", "content": prompt}
                     ],
                     temperature=temperature,
@@ -188,11 +173,6 @@ def execute_prompt(prompt, llm, objective, history=None, temperature=0.6):
             print('Retrying...')
             time.sleep(2)
     answer = response.choices[0].message.content
-    try:
-        llm._update_costs(response.usage)
-    except:
-        print("No cost calculated for finetuned model")
-        pass
     return answer.strip()
 
 
@@ -217,43 +197,3 @@ def safe_generate_response(prompt,
     return fail_safe_response
 
 
-def get_embedding(text, model="text-embedding-ada-002"):
-    text = text.replace("\n", " ")
-    if not text:
-        text = "this is blank"
-    return openai.Embedding.create(
-        input=[text], model=model)['data'][0]['embedding']
-
-
-if __name__ == '__main__':
-    gpt_parameter = {"engine": "text-davinci-003", "max_tokens": 50,
-                     "temperature": 0, "top_p": 1, "stream": False,
-                     "frequency_penalty": 0, "presence_penalty": 0,
-                     "stop": ['"']}
-    curr_input = ["driving to a friend's house"]
-    prompt_lib_file = "prompt_template/test_prompt_July5.txt"
-    prompt = generate_prompt(curr_input, prompt_lib_file)
-
-
-    def __func_validate(gpt_response):
-        if len(gpt_response.strip()) <= 1:
-            return False
-        if len(gpt_response.strip().split(" ")) > 1:
-            return False
-        return True
-
-
-    def __func_clean_up(gpt_response):
-        cleaned_response = gpt_response.strip()
-        return cleaned_response
-
-
-    output = safe_generate_response(prompt,
-                                    gpt_parameter,
-                                    5,
-                                    "rest",
-                                    __func_validate,
-                                    __func_clean_up,
-                                    True)
-
-    print(output)

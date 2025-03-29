@@ -1,0 +1,89 @@
+student: you typically travel to and from educational institutions at similar times.
+
+teacher: you typically travel to and from educational institutions at similar times.
+
+office worker: you have a fixed morning and evening commute, often heading to office districts or commercial centers.
+
+visitor: you tend to travel throughout the day, often visit attractions, dining areas, and shopping districts.
+
+retail employee: your travel patterns might include shifts that start late in the morning and end in the evening.
+
+night shift worker: you travel to work in the evening and return home in the early morning.
+
+fitness enthusiast: you often travel early in the morning, in the evening, or on weekends to fitness centers or parks.
+
+service industry worker: you might travel outside of standard business hours, often later in the evening or at night.
+
+remote worker: you may have non-standard travel patterns, often visit coworking spaces or cafes at various times.
+
+public service official: you often work in shifts, leading to varied travel times throughout the day and night.
+
+caregiver: you often travel for school runs, grocery shopping, and other errands throughout the day.
+
+public transport worker: you have schedules tied to the transit system's operating hours.
+
+delivery personnel: your travel patterns are spread throughout the day, aligned with peak times for delivering goods to businesses and homes.
+
+fitness enthusiast: you often travel early in the morning, in the evening, or on weekends to fitness centers or parks.
+
+retiree: your travel patterns can be varied, generally having routine visits to community centers, parks, healthcare providers, and local stores.
+
+manufacturing worker: your travel times can vary, often involving early morning shifts or night shifts to align with production schedules.
+
+home-based business owner: you may travel infrequently for business-related errands or meetings but primarily work from home.
+
+unemployed individual: your travel patterns may be less defined and more varied, depending on personal routines, hobbies, or appointments.
+
+community volunteer: your travel patterns are often event-driven, traveling to various locations based on where volunteer opportunities are scheduled.
+
+local government employees: you often travel to municipal buildings or other city facilities during regular business hours.
+
+performer: your travel patterns might involve irregular hours, often around performance schedules or when inspiration strikes for their next piece of work.
+
+pet owner: you may have regular travel patterns for walks or trips to the vet.
+
+real estate agent: you travel frequently throughout the neighborhood to show properties at varying times based on client availability.
+
+utility workers: you have travel patterns that may be emergency-responsive or scheduled for maintenance work, often during the daytime.
+
+environmental worker: your travel patterns are typically consistent with their work schedules.
+
+community health worker: you often travel to meet clients where they live or in community centers, with travel patterns dictated by appointments and client needs.
+
+political campaign worker: Around election times or during periods of active campaigns, your travel is focused on canvassing and attending events.
+
+event planner: you have intense periods of travel to venues and suppliers during events.
+
+business traveler: your patterns are heavily influenced by the timing and location of their business events.
+
+seasonal worker: your travel patterns may include daily trips to seasonal employment locations such as holiday markets or summer festivals.
+
+shift manager: you often have to travel outside of standard working hours to open or close businesses or oversee different work shifts.
+
+student with part-time jobs: your travel patterns can be complex, with movements between educational institutions and job locations, often at irregular hours.
+
+entrepreneur: you may have unpredictable travel patterns, frequently moving between meetings, suppliers, and their business premises.
+
+non-profit worker: your travel can be event-driven or community meeting-oriented, often happening in the evenings when community members are available.
+
+academic researcher: your travel might be project-specific, with trips to libraries, universities, field sites, or conferences.
+
+trade professional: you often travel throughout the day to various job sites in response to service calls.
+
+journalist: you travel to various locations to cover stories, with travel times dependent on news events.
+
+law enforcement detective: you may have irregular travel patterns as they follow up on investigations.
+
+mail and package delivery personnel: your routes are typically defined but may vary daily based on the volume and location of deliveries.
+
+municipal inspectors: you have travel patterns based on scheduled inspections or audits.
+
+local artist and craftsmen: you may travel to markets, workshops, or galleries depending on where they showcase or sell their work.
+
+librarians: your travel is typically regular, to and from cultural institutions.
+
+diplomatic personnel: you work in neighborhoods with international organizations, you may have travel patterns related to official functions and international meetings.
+
+waste collection operative: you have early morning starts and predefined routes for collection services.
+
+street vendors: your travel patterns are determined by the locations and times where there are the most customer traffic.

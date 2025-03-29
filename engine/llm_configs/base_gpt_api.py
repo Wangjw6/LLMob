@@ -5,7 +5,7 @@ Abstract GPT class
 @File    : base_gpt_api.py
 """
 from abc import abstractmethod
-from simulator.engine.base_chatbot import BaseChatbot
+from engine.llm_configs.base_chatbot import BaseChatbot
 
 
 class BaseGPTAPI(BaseChatbot):
