@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 OPENAI_API_KEY: ""
 OPENAI_API_MODEL: "gpt-4o-mini"
-=======
 global_proxy: ""
 OPENAI_API_KEY: ""
->>>>>>> parent of 1f4e656 (update the experiment entry)
 
