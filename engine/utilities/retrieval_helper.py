@@ -50,14 +50,14 @@ class ContrastiveDataset(Dataset):
                     scores[i][j] = score
                     scores[j][i] = score
 
-            sorted_indices = sorted(range(len(self.data)), key=lambda k: scores[k].reshape(-1).tolist(), reverse=True)
+            sorted_indices = sorted(range(len(self.data)), key=lambda k: scores[i][k].reshape(-1).tolist(), reverse=True)
             query_date = node_dates[i]
             node_date = node_dates[sorted_indices[0]] # most similar / positive sample
             input_ = input_from_date(query_date, node_date)
             sample.append(input_)
 
             for k in range(self.num_pairs-1):
-                node_date = node_dates[sorted_indices[-k+1]] # least similar / negative sample
+                node_date = node_dates[sorted_indices[-(k+1)]] # least similar / negative sample
                 input_ = input_from_date(query_date, node_date)
                 sample.append(input_)
             sample = np.array(sample).reshape(self.num_pairs, -1)
